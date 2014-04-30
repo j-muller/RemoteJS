@@ -1,0 +1,23 @@
+default:
+    network_interface: "en0"
+    verbose: true
+    artworks_path: "./artworks/"
+
+    plugins:
+        # spotify:
+        #     path: "./plugins/spotify/spotify.js"
+
+        #     cache: "./plugins/spotify/cache"
+        #     settings: "./plugins/spotify/settings"
+
+        #     username: "Sh0ggy"
+        #     password: "Jeffrey571992"
+
+        itunes:
+            path: "./plugins/itunes/itunes.js"
+
+            # node-daap stuff - https://github.com/j-muller/node-daap
+            host: '127.0.0.1'
+            port: 3689
+            pairingCode: '0x5D73103827379243'
+

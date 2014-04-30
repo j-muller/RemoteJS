@@ -1,0 +1,35 @@
+.sidr {
+  display: none;
+  position: absolute;
+  position: fixed;
+  top: 0;
+  height: 100%;
+  z-index: 999999;
+  width: 260px;
+  overflow-x: none;
+  overflow-y: auto;
+/*  font-family: "La"
+  font-family: "lucida grande", tahoma, verdana, arial, sans-serif;
+*/  font-size: 15px;
+  background: #383e4b;
+  color: white;
+}
+
+.sidr .sidr-inner {
+  padding: 0 0 15px;
+}
+
+.sidr .sidr-inner > p {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.sidr.right {
+  left: auto;
+  right: -260px;
+}
+
+.sidr.left {
+  left: -260px;
+  right: auto;
+}
