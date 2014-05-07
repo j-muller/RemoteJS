@@ -347,7 +347,25 @@ footer .navigation li a.active {
 }
 
 .song-data .player-controls li {
+    margin: 20px 0 20px 10px;
     float: left;
     font-size: 24px;
-    margin-left: 10px;
+    /*margin-left: 10px;*/
+}
+
+input[type=range].volume {
+    -webkit-appearance: none;
+    background-color: #24272f;
+    width: 200px;
+    height:20px;
+    border-radius: 20px;
+}
+
+input[type="range"].volume::-webkit-slider-thumb {
+     -webkit-appearance: none;
+    background-color: black;
+    opacity: 0.5;
+    width: 10px;
+    height: 26px;
+    border-radius: 2px;
 }
