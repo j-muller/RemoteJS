@@ -3,7 +3,7 @@
 body {
     width: 100%;
     background-color: #f5f5f5;
-    font-family: 'Lato',sans-serif;
+    font-family: 'Lato', sans-serif;
     font-weight: 400;
     font-size: 12px;
 }
@@ -89,11 +89,11 @@ a {
     background-color: #383e4b;
     position: fixed;
     z-index: 99;
-    display: none;
+    /*display: none;*/
 }
 
 .panel.panel-left {
-    left: -260px;
+    /*left: -260px;*/
     left: 0;
     top: 0;
 }
@@ -312,4 +312,42 @@ footer .navigation li a.active {
 
 .users li.active {
     background: #2d323d;
+}
+
+.song-data {
+    text-align: center;
+    margin-top: 20px;
+    color: white;
+}
+
+.song-data a {
+    color: white;
+}
+
+.song-data h1 {
+    font-size: 16px;
+}
+
+.song-data h3 {
+    font-size: 11px;
+}
+
+.song-data img {
+    margin: 20px 0;
+    width: 200px;
+    height: 200px;
+}
+
+.song-data .player-controls {
+    width: 120px;
+    height: 30px;
+    line-height: 30px;
+    margin: auto;
+    text-align: center;
+}
+
+.song-data .player-controls li {
+    float: left;
+    font-size: 24px;
+    margin-left: 10px;
 }

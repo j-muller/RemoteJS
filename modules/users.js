@@ -32,13 +32,13 @@ rjs.users = {
         //     'volume': rjs.itunes.volume
         // });
 
-        for (var i = 0; i < len; i++) {
-            songs.push({
-                library: rjs.plugins[i].songs(),
-                plugin: rjs.plugins[i].id
-            });
-        }
-        socket.emit('songs', songs);
+        // for (var i = 0; i < len; i++) {
+        //     songs.push({
+        //         library: rjs.plugins[i].songs(),
+        //         plugin: rjs.plugins[i].id
+        //     });
+        // }
+        // socket.emit('songs', songs);
     },
 
     /* Broadcast disconnection to everyone */
