@@ -13,7 +13,6 @@ var express = require('express'),
     app     = express(),
     server  = require('http').createServer(app),
     io      = require('socket.io').listen(server, { log: false }),
-    libdaap = require('daap'),
     config  = require('yaml-config'),
     users   = require('./modules/users.js'),
     library = require('./modules/library.js'),
@@ -22,9 +21,8 @@ var express = require('express'),
     utils   = require('./utils.js');
 
 rjs.io           = io;
-rjs.libdaap      = libdaap;
 rjs.config       = config.readConfig('./config.yaml');
-rjs.plugins      = [];
+rjs.plugins      = {};
 rjs.artworksPath = rjs.config.artworks_path;
 
 /*********** ROUTES ***********/
@@ -53,7 +51,7 @@ for (var plugin in rjs.config.plugins) {
     var pluginConf = rjs.config.plugins[plugin];
     var plugin     = require(pluginConf.path)(pluginConf);
 
-    rjs.plugins.push(plugin);
+    rjs.plugins[plugin.id] = plugin;
 }
 
 /*********** SOCKET.IO ***********/
@@ -67,6 +65,8 @@ io.sockets.on('connection', function (socket) {
     /* Music */
     utils.eventProxy('play music', socket, rjs.music.playMusic);
     utils.eventProxy('change volume', socket, rjs.music.changeVolume);
+    utils.eventProxy('pause', socket, rjs.music.pause);
+    utils.eventProxy('play', socket, rjs.music.play);
 
 });
 
