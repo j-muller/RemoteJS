@@ -41,22 +41,45 @@ app.music = {
         app.socket.emit('change volume', { value: sliderValue });
     },
 
-    renderItunesMetadata: function(data) {
-        $('input[name=volume-slider]').val(data.volume);
+    renderPlayerData: function(data) {
+        if (data.playing === true)
+            $('.play-pause').removeClass('fa-play').addClass('fa-pause');
+        else
+            $('.play-pause').removeClass('fa-pause').addClass('fa-play');
+
+        $('.song-data h1').text(data.current_song);
+        $('.song-data h3').text(data.current_artist);
+        $('input[type=range].volume').val(data.volume);
+    },
+
+    togglePlay: function() {
+        if ($('.play-pause').hasClass('fa-play'))
+            app.socket.emit('play');
+        else
+            app.socket.emit('pause');
     }
 
 };
 
 setTimeout(function() {
 
+    app.socket.on('paused', function () {
+        $('.play-pause').removeClass('fa-pause').addClass('fa-play');
+    });
+
+    app.socket.on('played', function () {
+        $('.play-pause').removeClass('fa-play').addClass('fa-pause');
+    });
+
     app.socket.on('volume', function(packet) {
-        $('input[name=volume-slider]').val(packet.value).slider('refresh');
+        $('input[type=range].volume').val(packet.value);
     });
 
-    app.socket.on('itunes metadata', function (packet) {
-        app.music.renderItunesMetadata(packet);
+    app.socket.on('player data', function (packet) {
+        app.music.renderPlayerData(packet);
     });
 
-    $('input[name=volume-slider]').mouseup(app.music.onVolumeSliderChanged);
+    $('.play-pause').click(app.music.togglePlay);
+    $('input[type=range].volume').on('click touchend', app.music.onVolumeSliderChanged);
 
 }, 100);
