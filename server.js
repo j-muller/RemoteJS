@@ -71,4 +71,4 @@ io.sockets.on('connection', function (socket) {
 });
 
 
-server.listen(12340);
+server.listen(rjs.config.port);

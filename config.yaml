@@ -1,0 +1,14 @@
+default:
+    port: 12340                         # RemoteJS port
+    network_interface: "en0"            # Network interface to get IP address
+    verbose: true
+    artworks_path: "./artworks/"        # Path to store music artworks
+
+    plugins:
+        itunes:
+            path: "./plugins/itunes/itunes.js"
+
+            # node-daap stuff - https://github.com/j-muller/node-daap
+            host: '127.0.0.1'
+            port: 3689
+            pairingCode: '0xD34DB33FD34DB33F'

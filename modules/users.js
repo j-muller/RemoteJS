@@ -21,7 +21,9 @@ rjs.users = {
             console.log('New user %s has been connected', packet.username);
 
         rjs.users.connectedUsers[socket.id] = packet.username;
-        socket.set('username', packet.username);
+
+        // https://github.com/Automattic/socket.io/issues/1481 wtf
+        socket.username = packet.username;
 
         socket.broadcast.emit('user connected', { username: packet.username });
 

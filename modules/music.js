@@ -12,33 +12,23 @@ rjs.music = {
 
     playMusic: function (socket, packet) {
         if (rjs.config.verbose === true)
-            socket.get('username', function (err, username) {
-                console.log('%s played item no. %d', username, packet.item);
-            });
+            console.log('%s played item no. %d', socket.username, packet.item);
 
         rjs.plugins['itunes'].playItem(packet.item);
     },
 
     // TODO - change volume using plugins
     changeVolume: function (socket, packet) {
-        if (rjs.config.verbose) {
-            socket.get('username', function (err, username) {
-                if (err === null)
-                    console.log('User %s changed volume. New value = %d', username, packet.value);
-            });
-        }
+        if (rjs.config.verbose)
+            console.log('User %s changed volume. New value = %d', socket.username, packet.value);
 
         // TODO
         rjs.plugins['itunes'].volume(packet.value);
     },
 
     play: function (socket) {
-        if (rjs.config.verbose) {
-            socket.get('username', function (err, username) {
-                if (err === null)
-                    console.log('User %s played the current song.', username);
-            });
-        }
+        if (rjs.config.verbose)
+            console.log('User %s played the current song.', socket.username);
 
         console.log(rjs.music.queue);
 
@@ -50,12 +40,8 @@ rjs.music = {
     },
 
     pause: function (socket) {
-        if (rjs.config.verbose) {
-            socket.get('username', function (err, username) {
-                if (err === null)
-                    console.log('User %s paused the current song.', username);
-            });
-        }
+        if (rjs.config.verbose)
+            console.log('User %s paused the current song.', socket.username);
 
         if (rjs.music.queue.length > 0) {
             rjs.plugins[rjs.music.queue[0].id].pause(function () {

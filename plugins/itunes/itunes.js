@@ -15,7 +15,7 @@ var itunes = {
     id: 'itunes',
 
     /* DAAP library */
-    daap: require('/Users/jeffrey/Repositories/node-daap/lib/daap.js'), // TODO
+    daap: require('daap'),
 
     /* Database id */
     databaseId: null,
