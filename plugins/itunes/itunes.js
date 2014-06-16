@@ -15,7 +15,7 @@ var itunes = {
     id: 'itunes',
 
     /* DAAP library */
-    daap: require('daap'),
+    daap: require('/Users/jeffrey/Repositories/node-daap/lib/daap.js'), // TODO
 
     /* Database id */
     databaseId: null,
@@ -68,7 +68,7 @@ var itunes = {
                     itunes.daap.containers(itunes.session, database['dmap.itemid'], function (error, data) {
                         var container = queries.getContainer(data, 'Musique');
 
-                        rjs.libdaap.items(itunes.session, database['dmap.itemid'], container['dmap.itemid'], function (error, data) {
+                        itunes.daap.items(itunes.session, database['dmap.itemid'], container['dmap.itemid'], function (error, data) {
                             var songs = data['daap.playlistsongs']['dmap.listing'];
                             var len = songs.length;
 
@@ -77,6 +77,13 @@ var itunes = {
                             }
 
                             itunes.artworks();
+                            itunes.currentSong(function (song) {
+                                if (rjs.config.verbose === true)
+                                    console.log('Current song in iTunes : %s', JSON.stringify(song));
+
+                                if (song !== null)
+                                    rjs.music.queue.push(song);
+                            });
                         });
                     });
                 });
@@ -93,12 +100,97 @@ var itunes = {
         };
     },
 
+    /* Get the current playing song */
+    currentSong: function (callback) {
+        itunes.daap.playStatusUpdate(itunes.session, function (error, data) {
+            var song = null;
+
+            if (error !== null && rjs.config.verbose === true)
+                console.log('Unable to get the current song. [ERROR: %s]', error);
+
+            song = {
+                'playing': (data['dmcp.playstatus']['dacp.playerstate'] === 4) ? true : false,
+                'title': data['dmcp.playstatus']['dacp.nowplayingname'],
+                'artist': data['dmcp.playstatus']['dacp.nowplayingartist'],
+                'album': data['dmcp.playstatus']['dacp.nowplayingalbum'],
+                'id': itunes.id
+            };
+
+            callback(song);
+        });
+    },
+
     /* Play a song */
-    play: function (item) {
+    playItem: function (item) {
         itunes.daap.play(itunes.session, item, function(error, data) {
             if (error) {
                 // TODO: log error
             }
+        });
+    },
+
+    /* Set/Get volume on iTunes */
+    volume: function (value, callback) {
+        if (value != null) {
+            itunes.daap.setProperty(itunes.session, {
+                'dmcp.volume': value
+            }, function(error, data) {
+                console.log(error);
+                console.log(data);
+                if (error && rjs.config.verbose === true) {
+                    console.log('Error when trying to change volume');
+                }
+            });
+        }
+
+        if (callback != null && typeof callback === 'function')
+            itunes.daap.getProperty(itunes.session, ['dmcp.volume', 'dmcp.playstatus'], callback);
+    },
+
+    /* Pause the current song */
+    pause: function (onSuccess) {
+        itunes.daap.pause(itunes.session, function(error, data) {
+            if (error !== null && rjs.config.verbose === true)
+                console.log('iTunes doesn\'t seem to want to pause music...')
+
+            onSuccess();
+        });
+    },
+
+    /* Play the current song */
+    play: function (onSuccess) {
+        itunes.daap.playPause(itunes.session, function(error, data) {
+            if (error !== null && rjs.config.verbose === true)
+                console.log('iTunes doesn\'t seem to want to play music...')
+
+            onSuccess();
+        });
+    },
+
+    /* Send player data (such as song title, artist name, player is running, ...) */
+    playerData: function (socket) {
+        var playerData = {};
+
+        itunes.volume(null, function (error, data) {
+            if (error) {
+                if (rjs.config.verbose === true) console.log('Failed to get volume');
+                return;
+            }
+
+            playerData.volume = data['dmcp.getpropertyresponse']['dmcp.volume'];
+            itunes.daap.playStatusUpdate(itunes.session, function (error, data) {
+                if (error) {
+                    if (rjs.config.verbose === true) console.log('Failed to get playStatusUpdate');
+                    return;
+                }
+
+                playerData.playing = (data['dmcp.playstatus']['dacp.playerstate'] == 4) ? true : false;
+                playerData.current_song = data['dmcp.playstatus']['dacp.nowplayingname'];
+                playerData.current_artist = data['dmcp.playstatus']['dacp.nowplayingartist'];
+                playerData.current_album = data['dmcp.playstatus']['dacp.nowplayingalbum'];
+
+                socket.emit('player data', playerData);
+            });
         });
     }
 };

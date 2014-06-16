@@ -17,6 +17,9 @@ rjs.users = {
         var songs = [];
         var len   = rjs.plugins.length;
 
+        if (rjs.config.verbose === true)
+            console.log('New user %s has been connected', packet.username);
+
         rjs.users.connectedUsers[socket.id] = packet.username;
         socket.set('username', packet.username);
 
@@ -28,17 +31,16 @@ rjs.users = {
 
         socket.emit('user list', { users: users });
 
-        // socket.emit('itunes metadata', {
-        //     'volume': rjs.itunes.volume
-        // });
+        rjs.users.sendPlayerData(socket);
 
         // for (var i = 0; i < len; i++) {
-        //     songs.push({
-        //         library: rjs.plugins[i].songs(),
-        //         plugin: rjs.plugins[i].id
-        //     });
+            songs.push({
+                library: rjs.plugins['itunes'].songs(),
+                plugin: rjs.plugins['itunes'].id
+            });
         // }
-        // socket.emit('songs', songs);
+        // console.log(songs);
+        socket.emit('songs', songs);
     },
 
     /* Broadcast disconnection to everyone */
@@ -56,7 +58,14 @@ rjs.users = {
         for (var i = 0; i < len; i++) {
             rjs.plugins[i].search(packet.pattern);
         }
-    }
+    },
+
+    // TODO - return player data of the current song
+    sendPlayerData: function (socket) {
+        var playerData = {};
+
+        rjs.plugins['itunes'].playerData(socket);
+    },
 
 };
 

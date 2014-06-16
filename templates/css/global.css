@@ -89,11 +89,11 @@ a {
     background-color: #383e4b;
     position: fixed;
     z-index: 99;
-    /*display: none;*/
+    display: none;
 }
 
 .panel.panel-left {
-    /*left: -260px;*/
+    left: -260px;
     left: 0;
     top: 0;
 }
@@ -350,7 +350,6 @@ footer .navigation li a.active {
     margin: 20px 0 20px 10px;
     float: left;
     font-size: 24px;
-    /*margin-left: 10px;*/
 }
 
 input[type=range].volume {

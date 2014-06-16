@@ -21,7 +21,6 @@ Array.prototype.inArray = function(p_val) {
 app.proxyClickEvent = function(event) {
     var role = $(event.currentTarget).attr('role');
 
-    console.log(role);
     if (role == 'open-panel' || app.panelOpened !== null) {
         app.togglePanel(event);
     } else if (role == 'user-login') {
